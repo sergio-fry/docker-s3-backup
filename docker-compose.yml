@@ -1,7 +1,13 @@
-cron:
+backup:
   build: .
   links:
     - db:db
+  environment:
+    TARGET_PATH: the-backup
+    SCHEDULE: "*/30 * * * * *"
+
+  env_file:
+    - .env
 
 db:
   image: postgres:9.4
