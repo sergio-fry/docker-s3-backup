@@ -1,0 +1,7 @@
+cron:
+  build: .
+  links:
+    - db:db
+
+db:
+  image: postgres:9.4
