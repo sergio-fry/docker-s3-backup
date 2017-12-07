@@ -5,7 +5,6 @@ backup:
   environment:
     TARGET_PATH: the-backup
     INCR_BACKUP_SCHEDULE: "\\* \\* \\* \\* \\*"
-    FULL_BACKUP_SCHEDULE: "\\*/5 \\* \\* \\* \\*"
 
   env_file:
     - .env

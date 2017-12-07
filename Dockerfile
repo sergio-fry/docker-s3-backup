@@ -14,10 +14,14 @@ RUN chmod +x /usr/local/bin/*
 
 ENV TARGET_PATH=my-backuped-files
 
-# Run incremental backup each night
+# Run incremental backup each night at 00:00
 ENV INCR_BACKUP_SCHEDULE="0 0 \\* \\* \\*"
 
-# Run full backup each week
-ENV FULL_BACKUP_SCHEDULE="15 0 */7 \\* \\*"
+# Run full backup each week at 00:15
+ENV FULL_BACKUP_SCHEDULE="15 0 \\*/7 \\* \\*"
+ENV MAX_FULL_BACKUPS=6
+
+# Run cleanup each 1st day at 03:00
+ENV CLEANUP_SCHEDULE="0 3 1 \\* \\*"
 
 CMD ["scheduler.sh"]

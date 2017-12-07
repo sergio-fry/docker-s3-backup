@@ -1,21 +1,39 @@
 #!/bin/sh
 
+export DST="s3+http://$S3_BUCKET/$TARGET_PATH"
+export SRC=/dumps
+export OPTIONS="--allow-source-mismatch --no-encryption --s3-use-new-style"
+
 echo `date`
 echo "Creating a database dump... ---------------------------------"
-pg_dumpall -h db -U postgres > /dumps/dump.sql
-ls -l /dumps/dump.sql
+pg_dumpall -h db -U postgres > $SRC/dump.sql
+ls -l $SRC/dump.sql
 
 echo "Cleaning up redundant files... ------------------------------"
 rm -rf /root/.cache/duplicity/*
-#duplicity --allow-source-mismatch --no-encryption --s3-use-new-style cleanup --force s3+http://$S3_BUCKET/$TARGET_PATH
+
 
 # --tempdir
 # --s3-use-multiprocessing
-echo "Uploading to S3... ------------------------------------------"
-duplicity --allow-source-mismatch --no-encryption --s3-use-new-style /dumps s3+http://$S3_BUCKET/$TARGET_PATH
+
+if [ "$1" = "cleanup" ]; then
+  echo "Cleaning up... ------------------------------------------"
+  duplicity cleanup --force $OPTIONS $DST
+  duplicity remove-all-but-n-full --force $MAX_FULL_BACKUPS $OPTIONS $DST
+
+else
+  echo "Uploading to S3... ------------------------------------------"
+  if [ "$1" = "full" ]; then
+    echo "Full backup"
+    duplicity full $OPTIONS $SRC $DST
+  else
+    echo "Incremental backup"
+    duplicity incremental $OPTIONS $SRC $DST
+  fi
+fi
 
 echo "Retreiving collection info... -------------------------------"
-duplicity --allow-source-mismatch --no-encryption --s3-use-new-style collection-status s3+http://$S3_BUCKET/$TARGET_PATH
-duplicity --allow-source-mismatch --no-encryption --s3-use-new-style list-current-files s3+http://$S3_BUCKET/$TARGET_PATH
+duplicity $OPTIONS collection-status $DST
+duplicity $OPTIONS list-current-files $DST
 
 exit 0
