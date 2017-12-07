@@ -1,5 +1,6 @@
 #!/bin/sh
 
+echo `date`
 echo "Creating a database dump... ---------------------------------"
 pg_dumpall -h db -U postgres > /dumps/dump.sql
 ls -l /dumps/dump.sql

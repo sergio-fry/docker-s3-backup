@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-echo "$SCHEDULE root /usr/local/bin/backup.sh"
+echo "$INCR_BACKUP_SCHEDULE /usr/local/bin/backup.sh"
+echo "$FULL_BACKUP_SCHEDULE /usr/local/bin/backup.sh full"
 
-echo "* * * * * root sh -e /usr/local/bin/backup.sh > /proc/2/fd/1 2>/proc/1/fd/2" > /etc/cron.d/my-crontab
-chmod 0644 /etc/cron.d/my-crontab
+#start-cron "$INCR_BACKUP_SCHEDULE /usr/local/bin/backup.sh >> /var/log/cron.log 2>&1"
 
-cron -f
+start-cron "$INCR_BACKUP_SCHEDULE echo 'Incremental backup...' >> /var/log/cron.log 2>&1" \
+  "$FULL_BACKUP_SCHEDULE echo 'Full backup...' >> /var/log/cron.log 2>&1"

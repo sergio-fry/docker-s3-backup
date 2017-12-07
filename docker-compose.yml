@@ -4,7 +4,8 @@ backup:
     - db:db
   environment:
     TARGET_PATH: the-backup
-    SCHEDULE: "*/30 * * * * *"
+    INCR_BACKUP_SCHEDULE: "\\* \\* \\* \\* \\*"
+    FULL_BACKUP_SCHEDULE: "\\*/5 \\* \\* \\* \\*"
 
   env_file:
     - .env
