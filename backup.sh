@@ -6,8 +6,8 @@ export OPTIONS="--allow-source-mismatch --no-encryption --s3-use-new-style"
 
 echo `date`
 echo "Creating a database dump... ---------------------------------"
-pg_dumpall -h db -U postgres > $SRC/dump.sql
-ls -l $SRC/dump.sql
+/usr/local/bin/dump.sh
+ls -l $SRC/
 
 echo "Cleaning up redundant files... ------------------------------"
 rm -rf /root/.cache/duplicity/*

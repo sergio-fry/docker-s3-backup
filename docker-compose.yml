@@ -1,13 +1,23 @@
 backup:
   build: .
   links:
-    - db:db
+    - pg:pg
+    - mysql:mysql
   environment:
     TARGET_PATH: the-backup
     INCR_BACKUP_SCHEDULE: "\\* \\* \\* \\* \\*"
+    DUMP_COMMAND: "mysqldump"
 
   env_file:
     - .env
 
-db:
+pg:
   image: postgres:9.4
+
+mysql:
+  image: mariadb:10.3
+  environment:
+    MYSQL_DATABASE: 'db'
+    MYSQL_USER: 'mysql'
+    MYSQL_PASSWORD: 'mysql'
+    MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
