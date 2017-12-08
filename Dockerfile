@@ -5,7 +5,10 @@ RUN apt-get update && \
 
 RUN pip install boto
 
-VOLUME /dumps/
+RUN apt-get install -y mysql-client-5.5
+
+ENV SRC=/dumps
+VOLUME $SRC
 VOLUME /root/.cache/duplicity/
 
 COPY backup.sh /usr/local/bin/
@@ -23,5 +26,7 @@ ENV MAX_FULL_BACKUPS=6
 
 # Run cleanup each 1st day at 03:00
 ENV CLEANUP_SCHEDULE="0 3 1 \\* \\*"
+
+ENV DUMP_COMMAND="pg_dumpall -h db -U postgres > $SRC/dump.sql"
 
 CMD ["scheduler.sh"]
