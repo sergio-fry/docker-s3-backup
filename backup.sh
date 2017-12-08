@@ -28,7 +28,7 @@ else
     duplicity full $OPTIONS $SRC $DST
   else
     echo "Incremental backup"
-    duplicity incremental $OPTIONS $SRC $DST
+    duplicity $OPTIONS $SRC $DST
   fi
 fi
 
